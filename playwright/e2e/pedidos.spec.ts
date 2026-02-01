@@ -4,6 +4,9 @@ import { test, expect } from '@playwright/test';
 
 test('test', async ({ page }) => {
 
+  // Test Data
+  const order = 'VLO-CPEA6E';
+
   // Arrange
   await page.goto('http://localhost:5173/');
   await expect(page.getByTestId('hero-section').getByRole('heading')).toContainText('Velô Sprint');
@@ -12,21 +15,21 @@ test('test', async ({ page }) => {
 
 
   // Act
-  await page.getByRole('textbox', { name: 'Número do Pedido' }).fill('VLO-CPEA6E');
+  await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order);
   await page.getByRole('button', { name: 'Buscar Pedido' }).click();
 
   // Assert
   //await expect(page.getByTestId('order-result-id')).toBeVisible({ timeout: 10000 });
-  await expect(page.getByText('VLO-CPEA6E')).toBeVisible();
+  await expect(page.getByText(order)).toBeVisible();
 
   // const orderCode = page.locator('//p[text()="Pedido"]/..//p[text()="VLO-CPEA6E"]');
   // await expect(orderCode).toBeVisible({ timeout: 10000 });
 
   const containerPedido = page.getByRole('paragraph')
-    .filter({ hasText: 'Pedido' })
+    .filter({ hasText: /^Pedido$/ })
     .locator('..') // Sobe para o elemento pai (a div que agrupa ambos)
 
-  await expect(containerPedido).toContainText('VLO-CPEA6E');
+  await expect(containerPedido).toContainText(order);	
   
   await expect(page.getByText('APROVADO')).toBeVisible();
 
