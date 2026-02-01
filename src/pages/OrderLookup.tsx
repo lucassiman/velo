@@ -131,14 +131,14 @@ const OrderLookup = () => {
 
         {/* Order Result */}
         {searchedOrder && (
-          <Card className="animate-fade-in" >
+          <Card className="animate-fade-in" data-testid={`order-result-${searchedOrder.id}`}>
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Package className="w-5 h-5 text-muted-foreground" />
                   <div>
                     <p className="text-sm text-muted-foreground">Pedido</p>
-                    <p className="font-mono font-medium">
+                    <p className="font-mono font-medium" data-testid="order-result-id">
                       {searchedOrder.id}
                     </p>
                   </div>
