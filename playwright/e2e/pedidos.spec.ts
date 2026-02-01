@@ -18,12 +18,16 @@ test('test', async ({ page }) => {
   // Assert
   //await expect(page.getByTestId('order-result-id')).toBeVisible({ timeout: 10000 });
   await expect(page.getByText('VLO-CPEA6E')).toBeVisible();
-  await expect(page.locator('#root')).toContainText('VLO-CPEA6E');
- 
-  await expect(page.getByText('APROVADO')).toBeVisible();
-  await expect(page.locator('#root')).toContainText('APROVADO');;
 
+  // const orderCode = page.locator('//p[text()="Pedido"]/..//p[text()="VLO-CPEA6E"]');
+  // await expect(orderCode).toBeVisible({ timeout: 10000 });
+
+  const containerPedido = page.getByRole('paragraph')
+    .filter({ hasText: 'Pedido' })
+    .locator('..') // Sobe para o elemento pai (a div que agrupa ambos)
+
+  await expect(containerPedido).toContainText('VLO-CPEA6E');
   
-  
+  await expect(page.getByText('APROVADO')).toBeVisible();
 
 });
