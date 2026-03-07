@@ -1,5 +1,4 @@
 import { Page, expect } from '@playwright/test'
-import { searchOrder } from '../helpers'
 
 export type OrderStatus = 'APROVADO' | 'REPROVADO' | 'EM_ANALISE'
 
@@ -24,7 +23,8 @@ export function createOrderLockupActions(page: Page) {
     },
 
     async searchOrder(code: string) {
-      await searchOrder(page, code)
+      await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(code)
+      await page.getByRole('button', { name: 'Buscar Pedido' }).click()
     },
 
     async validateOrderDetails(order: OrderDetails) {

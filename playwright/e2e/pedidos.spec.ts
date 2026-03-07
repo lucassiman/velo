@@ -1,4 +1,4 @@
-import { test } from '../support/fixtures'
+import { expect, test } from '../support/fixtures'
 
 import { generateOrderCode } from '../support/helpers'
 import { OrderDetails } from '../support/actions/orderLockupActions'
@@ -78,5 +78,18 @@ test.describe('Consulta de Pedido', () => {
     await app.orderLockup.searchOrder('INVALIDO-123')
 
     await app.orderLockup.validateOrderNotFound()
+  })
+
+  test('deve manter o botão de busca desabilitado com campo vazio ou apenas espaços', async ({ app, page }) => {    
+    const button = page.getByRole('button', { name: 'Buscar Pedido' })
+    
+    await expect(button).toBeDisabled()
+
+    const orderInput = page.getByLabel('Número do Pedido')
+    await orderInput.fill('   ')
+    
+    await expect(button).toBeDisabled()
+
+
   })
 })
