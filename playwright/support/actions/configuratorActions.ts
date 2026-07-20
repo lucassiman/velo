@@ -27,7 +27,7 @@ export function createConfiguratorActions(page: Page) {
       await optionalCheckbox(name).uncheck()
     },
 
-    async goToCheckout() {
+    async finalizeConfiguration() {
       await page.getByRole('button', { name: 'Monte o Seu' }).click()
       await expect(page.getByRole('heading', { name: 'Finalizar Pedido' })).toBeVisible()
     },

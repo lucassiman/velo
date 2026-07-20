@@ -49,7 +49,7 @@ test.describe('Configuração do Veículo', () => {
     await app.configurator.checkOptional(/Precision Park/)
     await app.configurator.expectTotalPrice('R$ 50.500,00')
 
-    await app.configurator.goToCheckout()
+    await app.configurator.finalizeConfiguration()
 
     await app.configurator.expectOrderSummaryDescriptionWithOptionals()
     await app.configurator.expectOrderSummaryTotal('R$ 50.500,00')
