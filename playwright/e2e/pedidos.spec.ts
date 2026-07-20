@@ -1,7 +1,9 @@
 import { expect, test } from '../support/fixtures'
+import crypto from 'node:crypto'
 
 import { generateOrderCode } from '../support/helpers'
 import { OrderDetails } from '../support/actions/orderLockupActions'
+import { insertOrder, deleteOrder } from '../support/database/orders'
 
 test.describe('Consulta de Pedido', () => {
   test.beforeEach(async ({ app }) => {
@@ -9,8 +11,9 @@ test.describe('Consulta de Pedido', () => {
   })
 
   test('deve consultar um pedido aprovado', async ({ app }) => {
+    const orderNumber = generateOrderCode()
     const order: OrderDetails = {
-      number: 'VLO-CPEA6E',
+      number: orderNumber,
       status: 'APROVADO' as const,
       color: 'Midnight Black',
       wheels: 'sport Wheels',
@@ -20,17 +23,37 @@ test.describe('Consulta de Pedido', () => {
       },
       payment: 'À Vista'
     }
+
+    await insertOrder({
+      id: crypto.randomUUID(),
+      order_number: orderNumber,
+      color: 'midnight-black',
+      wheel_type: 'sport',
+      customer_name: order.customer.name,
+      customer_email: order.customer.email,
+      customer_phone: '11999999999',
+      customer_cpf: '12345678901',
+      payment_method: 'avista',
+      total_price: '42000',
+      status: 'APROVADO',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      optionals: []
+    })
  
     await app.orderLockup.searchOrder(order.number)
 
     await app.orderLockup.validateOrderDetails(order)
     await app.orderLockup.validateStatusBadge(order.status)
-
+    
+    // Clean up to keep tests isolated
+    await deleteOrder(orderNumber)
   })
 
   test('deve consultar um pedido reprovado', async ({ app }) => {
+    const orderNumber = generateOrderCode()
     const order: OrderDetails = {
-      number: 'VLO-0LNFEA',
+      number: orderNumber,
       status: 'REPROVADO' as const,
       color: 'Midnight Black',
       wheels: 'sport Wheels',
@@ -41,15 +64,35 @@ test.describe('Consulta de Pedido', () => {
       payment: 'À Vista'
     }
 
+    await insertOrder({
+      id: crypto.randomUUID(),
+      order_number: orderNumber,
+      color: 'midnight-black',
+      wheel_type: 'sport',
+      customer_name: order.customer.name,
+      customer_email: order.customer.email,
+      customer_phone: '11999999998',
+      customer_cpf: '12345678902',
+      payment_method: 'avista',
+      total_price: '42000',
+      status: 'REPROVADO',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      optionals: []
+    })
+
     await app.orderLockup.searchOrder(order.number)
 
     await app.orderLockup.validateOrderDetails(order)
     await app.orderLockup.validateStatusBadge(order.status)
+    
+    await deleteOrder(orderNumber)
   })
 
   test('deve consultar um pedido em analise', async ({ app }) => {
+    const orderNumber = generateOrderCode()
     const order: OrderDetails = {
-      number: 'VLO-B76FIK',
+      number: orderNumber,
       status: 'EM_ANALISE' as const,
       color: 'Glacier Blue',
       wheels: 'aero Wheels',
@@ -60,10 +103,29 @@ test.describe('Consulta de Pedido', () => {
       payment: 'À Vista'
     }
 
+    await insertOrder({
+      id: crypto.randomUUID(),
+      order_number: orderNumber,
+      color: 'glacier-blue',
+      wheel_type: 'aero',
+      customer_name: order.customer.name,
+      customer_email: order.customer.email,
+      customer_phone: '11999999997',
+      customer_cpf: '12345678903',
+      payment_method: 'avista',
+      total_price: '40000',
+      status: 'EM_ANALISE',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      optionals: []
+    })
+
     await app.orderLockup.searchOrder(order.number)
 
     await app.orderLockup.validateOrderDetails(order)
     await app.orderLockup.validateStatusBadge(order.status)
+
+    await deleteOrder(orderNumber)
   })
 
   test('deve exibir mensagem quando o pedido não é encontrado', async ({ app }) => {
@@ -89,7 +151,5 @@ test.describe('Consulta de Pedido', () => {
     await orderInput.fill('   ')
 
     await expect(button).toBeDisabled()
-
-
   })
 })
