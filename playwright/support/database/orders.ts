@@ -41,6 +41,10 @@ export async function deleteOrder(orderNumber: string) {
   return db.deleteFrom('orders').where('order_number', '=', orderNumber).execute();
 }
 
+export async function deleteOrderByCpf(cpf: string) {
+  return db.deleteFrom('orders').where('customer_cpf', '=', cpf).execute();
+}
+
 export async function cleanAllOrders() {
   return db.deleteFrom('orders').execute();
 }
