@@ -18,29 +18,17 @@ test.describe('Consulta de Pedido', () => {
       wheels: 'sport Wheels',
       customer: {
         name: 'Lucas Siman',
-        email: 'lucas@velo.dev'
+        email: 'lucas@velo.dev',
+        phone: '11999999999',
+        cpf: '84240971063'
       },
-      payment: 'À Vista'
+      payment: 'À Vista',
+      total_price: '42000'
     }
 
     await deleteOrder(order.number)
 
-    await insertOrder({
-      id: crypto.randomUUID(),
-      order_number: order.number,
-      color: 'midnight-black',
-      wheel_type: 'sport',
-      customer_name: order.customer.name,
-      customer_email: order.customer.email,
-      customer_phone: '11999999999',
-      customer_cpf: '12345678901',
-      payment_method: 'avista',
-      total_price: '42000',
-      status: 'APROVADO',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      optionals: []
-    })
+    await insertOrder(order)
  
     await app.orderLockup.searchOrder(order.number)
 
@@ -57,29 +45,17 @@ test.describe('Consulta de Pedido', () => {
       wheels: 'sport Wheels',
       customer: {
         name: 'Lino Jordan',
-        email: 'lino@hpw.com.br'
+        email: 'lino@hpw.com.br',
+        phone: '11999999998',
+        cpf: '12345678902'
       },
-      payment: 'À Vista'
+      payment: 'À Vista',
+      total_price: '42000'
     }
 
     await deleteOrder(order.number)
 
-    await insertOrder({
-      id: crypto.randomUUID(),
-      order_number: order.number,
-      color: 'midnight-black',
-      wheel_type: 'sport',
-      customer_name: order.customer.name,
-      customer_email: order.customer.email,
-      customer_phone: '11999999998',
-      customer_cpf: '12345678902',
-      payment_method: 'avista',
-      total_price: '42000',
-      status: 'REPROVADO',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      optionals: []
-    })
+    await insertOrder(order)
 
     await app.orderLockup.searchOrder(order.number)
 
@@ -96,29 +72,17 @@ test.describe('Consulta de Pedido', () => {
       wheels: 'aero Wheels',
       customer: {
         name: 'Luna Love',
-        email: 'luna@dev.com'
+        email: 'luna@dev.com',
+        phone: '11999999997',
+        cpf: '12345678903'
       },
-      payment: 'À Vista'
+      payment: 'À Vista',
+      total_price: '40000'
     }
 
     await deleteOrder(order.number)
 
-    await insertOrder({
-      id: crypto.randomUUID(),
-      order_number: order.number,
-      color: 'glacier-blue',
-      wheel_type: 'aero',
-      customer_name: order.customer.name,
-      customer_email: order.customer.email,
-      customer_phone: '11999999997',
-      customer_cpf: '12345678903',
-      payment_method: 'avista',
-      total_price: '40000',
-      status: 'EM_ANALISE',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      optionals: []
-    })
+    await insertOrder(order)
 
     await app.orderLockup.searchOrder(order.number)
 
