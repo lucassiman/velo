@@ -1,5 +1,4 @@
 import { expect, test } from '../support/fixtures'
-import crypto from 'node:crypto'
 
 import { generateOrderCode } from '../support/helpers'
 import { OrderDetails } from '../support/actions/orderLockupActions'
