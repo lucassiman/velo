@@ -11,9 +11,8 @@ test.describe('Consulta de Pedido', () => {
   })
 
   test('deve consultar um pedido aprovado', async ({ app }) => {
-    const orderNumber = generateOrderCode()
     const order: OrderDetails = {
-      number: orderNumber,
+      number: 'VLO-SE4R01',
       status: 'APROVADO' as const,
       color: 'Midnight Black',
       wheels: 'sport Wheels',
@@ -24,9 +23,11 @@ test.describe('Consulta de Pedido', () => {
       payment: 'À Vista'
     }
 
+    await deleteOrder(order.number)
+
     await insertOrder({
       id: crypto.randomUUID(),
-      order_number: orderNumber,
+      order_number: order.number,
       color: 'midnight-black',
       wheel_type: 'sport',
       customer_name: order.customer.name,
@@ -46,14 +47,11 @@ test.describe('Consulta de Pedido', () => {
     await app.orderLockup.validateOrderDetails(order)
     await app.orderLockup.validateStatusBadge(order.status)
     
-    // Clean up to keep tests isolated
-    await deleteOrder(orderNumber)
   })
 
   test('deve consultar um pedido reprovado', async ({ app }) => {
-    const orderNumber = generateOrderCode()
     const order: OrderDetails = {
-      number: orderNumber,
+      number: 'VLO-SE4R02',
       status: 'REPROVADO' as const,
       color: 'Midnight Black',
       wheels: 'sport Wheels',
@@ -64,9 +62,11 @@ test.describe('Consulta de Pedido', () => {
       payment: 'À Vista'
     }
 
+    await deleteOrder(order.number)
+
     await insertOrder({
       id: crypto.randomUUID(),
-      order_number: orderNumber,
+      order_number: order.number,
       color: 'midnight-black',
       wheel_type: 'sport',
       customer_name: order.customer.name,
@@ -86,13 +86,11 @@ test.describe('Consulta de Pedido', () => {
     await app.orderLockup.validateOrderDetails(order)
     await app.orderLockup.validateStatusBadge(order.status)
     
-    await deleteOrder(orderNumber)
   })
 
   test('deve consultar um pedido em analise', async ({ app }) => {
-    const orderNumber = generateOrderCode()
     const order: OrderDetails = {
-      number: orderNumber,
+      number: 'VLO-SE4R03',
       status: 'EM_ANALISE' as const,
       color: 'Glacier Blue',
       wheels: 'aero Wheels',
@@ -103,9 +101,11 @@ test.describe('Consulta de Pedido', () => {
       payment: 'À Vista'
     }
 
+    await deleteOrder(order.number)
+
     await insertOrder({
       id: crypto.randomUUID(),
-      order_number: orderNumber,
+      order_number: order.number,
       color: 'glacier-blue',
       wheel_type: 'aero',
       customer_name: order.customer.name,
@@ -125,7 +125,6 @@ test.describe('Consulta de Pedido', () => {
     await app.orderLockup.validateOrderDetails(order)
     await app.orderLockup.validateStatusBadge(order.status)
 
-    await deleteOrder(orderNumber)
   })
 
   test('deve exibir mensagem quando o pedido não é encontrado', async ({ app }) => {
