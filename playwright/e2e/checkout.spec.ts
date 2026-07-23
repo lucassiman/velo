@@ -121,7 +121,8 @@ test.describe('Checkout', () => {
     test.describe('Pagamento e Confirmação', () => {
 
         test.beforeEach(async ({ page, app }) => {
-            await app.checkout.goToCheckoutE2E()
+            await app.hero.open()
+            await app.configurator.finalizeConfiguration()
         })
 
         test('deve criar um pedido com pagamento à vista', async ({ page, app }) => {
@@ -165,7 +166,7 @@ test.describe('Checkout', () => {
 
             await deleteOrderByCpf(customerData.document)
 
-            await app.checkout.mockCreditAnalysis(701)
+            await app.mock.creditAnalysis(701)
 
             await app.checkout.fillCustomerlData(customerData)
             await app.checkout.selectStore(customerData.store)
@@ -193,7 +194,7 @@ test.describe('Checkout', () => {
 
             await deleteOrderByCpf(customerData.document)
 
-            await app.checkout.mockCreditAnalysis(600)
+            await app.mock.creditAnalysis(600)
 
             await app.checkout.fillCustomerlData(customerData)
             await app.checkout.selectStore(customerData.store)
@@ -221,7 +222,7 @@ test.describe('Checkout', () => {
 
             await deleteOrderByCpf(customerData.document)
 
-            await app.checkout.mockCreditAnalysis(500)
+            await app.mock.creditAnalysis(500)
 
             await app.checkout.fillCustomerlData(customerData)
             await app.checkout.selectStore(customerData.store)
@@ -249,7 +250,7 @@ test.describe('Checkout', () => {
 
             await deleteOrderByCpf(customerData.document)
 
-            await app.checkout.mockCreditAnalysis(450)
+            await app.mock.creditAnalysis(450)
 
             await app.checkout.fillCustomerlData(customerData)
             await app.checkout.selectStore(customerData.store)
@@ -278,7 +279,7 @@ test.describe('Checkout', () => {
 
             await deleteOrderByCpf(customerData.document)
 
-            await app.checkout.mockCreditAnalysis(450)
+            await app.mock.creditAnalysis(450)
 
             await app.checkout.fillCustomerlData(customerData)
             await app.checkout.selectStore(customerData.store)
@@ -307,7 +308,7 @@ test.describe('Checkout', () => {
 
             await deleteOrderByCpf(customerData.document)
 
-            await app.checkout.mockCreditAnalysis(450)
+            await app.mock.creditAnalysis(450)
 
             await app.checkout.fillCustomerlData(customerData)
             await app.checkout.selectStore(customerData.store)
