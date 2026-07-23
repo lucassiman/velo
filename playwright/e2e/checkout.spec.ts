@@ -118,9 +118,9 @@ test.describe('Checkout', () => {
         })
     })
 
-    test.describe('Fluxo Feliz', () => {
+    test.describe('Pagamento e Confirmação', () => {
 
-        test('CT05 - deve criar um pedido com pagamento à vista', async ({ page, app }) => {
+        test('deve criar um pedido com pagamento à vista', async ({ page, app }) => {
             
             const customerData = {
                 name: 'Lucas',
@@ -157,6 +157,108 @@ test.describe('Checkout', () => {
 
             // Assert
             await app.checkout.expectResult('Pedido Aprovado!')
+
+        })
+
+        test('deve aprovar automaticamente o crédito quando o score do CPF for maior que 700 no financiamento.', async ({ page, app }) => {
+            
+            const customerData = {
+                name: 'Augustus',
+                lastname: 'Siman',
+                email: 'siman.augustus@velo.dev',
+                document: '52608846041',
+                phone: '(11) 99999-9999',
+                store: 'Velô Paulista',
+                paymentMethod: 'financiamento',
+                totalPrice: 'R$ 40.000,00'
+            }
+
+            await deleteOrderByCpf(customerData.document)
+
+            await page.route('**/functions/v1/credit-analysis', async route =>
+                await route.fulfill({
+                    status: 200,
+                    contentType: 'application/json',
+                    body: JSON.stringify({
+                        status: 'Done',
+                        score: 701
+                    })
+                })
+            )
+
+            // Arrange (Fluxo ponta a ponta)
+            // 1. Landing Page
+            await page.goto('/')
+            await page.getByRole('link', { name: 'Configure Agora' }).click()
+            
+            // 2. Configurador (Opções padrão)
+            await expect(page).toHaveURL(/\/configure/)
+            await page.getByRole('button', { name: 'Monte o Seu' }).click()
+            
+            // 3. Checkout
+            await expect(page.getByRole('heading', { name: 'Finalizar Pedido' })).toBeVisible()
+
+            // Act
+            await app.checkout.fillCustomerlData(customerData)
+            await app.checkout.selectStore(customerData.store)
+            await app.checkout.selectPaymentMethod(customerData.paymentMethod)
+            // await app.checkout.expectOrderSummaryTotal(customerData.totalPrice)
+            await app.checkout.acceptTerms()
+            await app.checkout.submit()
+
+            // Assert
+            await app.checkout.expectResult('Pedido Aprovado!')
+
+        })
+
+        test('deve colocar o pedido em análise quando o score do CPF for entre 501 e 700 no financiamento', async ({ page, app }) => {
+            
+            const customerData = {
+                name: 'Julia',
+                lastname: 'Siman',
+                email: 'siman.julia@velo.dev',
+                document: '54438139007',
+                phone: '(11) 99999-9999',
+                store: 'Velô Paulista',
+                paymentMethod: 'financiamento',
+                totalPrice: 'R$ 40.000,00'
+            }
+
+            await deleteOrderByCpf(customerData.document)
+
+            await page.route('**/functions/v1/credit-analysis', async route =>
+                await route.fulfill({
+                    status: 200,
+                    contentType: 'application/json',
+                    body: JSON.stringify({
+                        status: 'Done',
+                        score: 600
+                    })
+                })
+            )
+
+            // Arrange (Fluxo ponta a ponta)
+            // 1. Landing Page
+            await page.goto('/')
+            await page.getByRole('link', { name: 'Configure Agora' }).click()
+            
+            // 2. Configurador (Opções padrão)
+            await expect(page).toHaveURL(/\/configure/)
+            await page.getByRole('button', { name: 'Monte o Seu' }).click()
+            
+            // 3. Checkout
+            await expect(page.getByRole('heading', { name: 'Finalizar Pedido' })).toBeVisible()
+
+            // Act
+            await app.checkout.fillCustomerlData(customerData)
+            await app.checkout.selectStore(customerData.store)
+            await app.checkout.selectPaymentMethod(customerData.paymentMethod)
+            // await app.checkout.expectOrderSummaryTotal(customerData.totalPrice)
+            await app.checkout.acceptTerms()
+            await app.checkout.submit()
+
+            // Assert
+            await app.checkout.expectResult('Pedido em Análise!')
 
         })
     })
