@@ -56,7 +56,7 @@ export function createConfiguratorActions(page: Page) {
         `);
     },
 
-    async expectCarImageSrc(src: string) {
+    async expectCarImageSrc(src: RegExp) {
       const carImage = page.locator('img[alt^="Velô Sprint"]')
       await expect(carImage).toHaveAttribute('src', src)
     }
