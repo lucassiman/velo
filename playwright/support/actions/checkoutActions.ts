@@ -20,37 +20,10 @@ export function createCheckoutActions(page: Page) {
       alerts
     },
 
-    async goToCheckoutE2E() {
-      //Arrange (Fluxo ponta a ponta)
-      // 1. Landing Page
-      await page.goto('/')
-      await page.getByRole('link', { name: 'Configure Agora' }).click()
-
-      // 2. Configurador (Opções padrão)
-      await page.getByRole('button', { name: 'Monte o Seu' }).click()
-
-      // 3. Checkout
-      await expect(page.getByRole('heading', { name: 'Finalizar Pedido' })).toBeVisible()
-    },
-
     async goToCheckout() {
       await page.getByRole('button', { name: 'Monte o Seu' }).click()
       await expect(page.getByRole('heading', { name: 'Finalizar Pedido' })).toBeVisible()
     },
-
-    async mockCreditAnalysis(score: number) {
-      await page.route('**/functions/v1/credit-analysis', async route =>
-        await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
-          body: JSON.stringify({
-            status: 'Done',
-            score: score
-          })
-        })
-      )
-    },
-
 
     async expectOrderSummaryTotal(price: string) {
       const priceElement = page.getByTestId('summary-total-price')
