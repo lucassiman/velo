@@ -1,5 +1,4 @@
 import { expect, test } from '../support/fixtures'
-import crypto from 'node:crypto'
 
 import { generateOrderCode } from '../support/helpers'
 import { OrderDetails } from '../support/actions/orderLockupActions'
@@ -11,121 +10,84 @@ test.describe('Consulta de Pedido', () => {
   })
 
   test('deve consultar um pedido aprovado', async ({ app }) => {
-    const orderNumber = generateOrderCode()
     const order: OrderDetails = {
-      number: orderNumber,
+      number: 'VLO-SE4R01',
       status: 'APROVADO' as const,
       color: 'Midnight Black',
       wheels: 'sport Wheels',
       customer: {
         name: 'Lucas Siman',
-        email: 'lucas@velo.dev'
+        email: 'lucas@velo.dev',
+        phone: '11999999999',
+        cpf: '84240971063'
       },
-      payment: 'À Vista'
+      payment: 'À Vista',
+      total_price: '42000'
     }
 
-    await insertOrder({
-      id: crypto.randomUUID(),
-      order_number: orderNumber,
-      color: 'midnight-black',
-      wheel_type: 'sport',
-      customer_name: order.customer.name,
-      customer_email: order.customer.email,
-      customer_phone: '11999999999',
-      customer_cpf: '12345678901',
-      payment_method: 'avista',
-      total_price: '42000',
-      status: 'APROVADO',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      optionals: []
-    })
+    await deleteOrder(order.number)
+
+    await insertOrder(order)
  
     await app.orderLockup.searchOrder(order.number)
 
     await app.orderLockup.validateOrderDetails(order)
     await app.orderLockup.validateStatusBadge(order.status)
     
-    // Clean up to keep tests isolated
-    await deleteOrder(orderNumber)
   })
 
   test('deve consultar um pedido reprovado', async ({ app }) => {
-    const orderNumber = generateOrderCode()
     const order: OrderDetails = {
-      number: orderNumber,
+      number: 'VLO-SE4R02',
       status: 'REPROVADO' as const,
       color: 'Midnight Black',
       wheels: 'sport Wheels',
       customer: {
         name: 'Lino Jordan',
-        email: 'lino@hpw.com.br'
+        email: 'lino@hpw.com.br',
+        phone: '11999999998',
+        cpf: '12345678902'
       },
-      payment: 'À Vista'
+      payment: 'À Vista',
+      total_price: '42000'
     }
 
-    await insertOrder({
-      id: crypto.randomUUID(),
-      order_number: orderNumber,
-      color: 'midnight-black',
-      wheel_type: 'sport',
-      customer_name: order.customer.name,
-      customer_email: order.customer.email,
-      customer_phone: '11999999998',
-      customer_cpf: '12345678902',
-      payment_method: 'avista',
-      total_price: '42000',
-      status: 'REPROVADO',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      optionals: []
-    })
+    await deleteOrder(order.number)
+
+    await insertOrder(order)
 
     await app.orderLockup.searchOrder(order.number)
 
     await app.orderLockup.validateOrderDetails(order)
     await app.orderLockup.validateStatusBadge(order.status)
     
-    await deleteOrder(orderNumber)
   })
 
   test('deve consultar um pedido em analise', async ({ app }) => {
-    const orderNumber = generateOrderCode()
     const order: OrderDetails = {
-      number: orderNumber,
+      number: 'VLO-SE4R03',
       status: 'EM_ANALISE' as const,
       color: 'Glacier Blue',
       wheels: 'aero Wheels',
       customer: {
         name: 'Luna Love',
-        email: 'luna@dev.com'
+        email: 'luna@dev.com',
+        phone: '11999999997',
+        cpf: '12345678903'
       },
-      payment: 'À Vista'
+      payment: 'À Vista',
+      total_price: '40000'
     }
 
-    await insertOrder({
-      id: crypto.randomUUID(),
-      order_number: orderNumber,
-      color: 'glacier-blue',
-      wheel_type: 'aero',
-      customer_name: order.customer.name,
-      customer_email: order.customer.email,
-      customer_phone: '11999999997',
-      customer_cpf: '12345678903',
-      payment_method: 'avista',
-      total_price: '40000',
-      status: 'EM_ANALISE',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      optionals: []
-    })
+    await deleteOrder(order.number)
+
+    await insertOrder(order)
 
     await app.orderLockup.searchOrder(order.number)
 
     await app.orderLockup.validateOrderDetails(order)
     await app.orderLockup.validateStatusBadge(order.status)
 
-    await deleteOrder(orderNumber)
   })
 
   test('deve exibir mensagem quando o pedido não é encontrado', async ({ app }) => {
