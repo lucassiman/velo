@@ -17,7 +17,7 @@ env:
   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-  VERCEL_SCOPE: siman4/velo
+  VERCEL_SCOPE: siman4
 
 jobs:
   unit-tests:
@@ -72,7 +72,7 @@ jobs:
 
       # 5. Obter as configurações do Vercel
       - name: Pull Vercel config
-        run: yarn vercel pull --yes --environment=preview --token=$VERCEL_TOKEN --scope=$VERCEL_SCOPE
+        run: yarn vercel pull --yes --environment=preview --token=$VERCEL_TOKEN
       
       # 6. Build para o Vercel
       - name: Build Vercel
