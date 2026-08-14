@@ -117,7 +117,7 @@ jobs:
 
       # 6. Execução dos Testes de Regressão
       - name: Run E2E Regression tests
-        run: yarn playwright test
+        run: npx playwright test
         env:
           BASE_URL: ${{ needs.build-and-deploy.outputs.deployment-url }}
           TESTDINO_TOKEN: ${{ secrets.TD_TOKEN }}
