@@ -5,7 +5,7 @@
 # para futura expansão (ex.: lint, build, cache, matrix, etc.)
 # ============================================================
 
-name: Continuous Integration
+name: Continuous Deployment
 
 on:
   push:
@@ -128,5 +128,19 @@ jobs:
         with:
           name: playwright-report
           path: playwright-report
+          
+  promote:
+    name: Promote to Production
+    needs: [e2e-tests]
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Vercel Promote
+        run: |
+          yarn vercel promote ${{ needs.build-and-deploy.outputs.deployment-url }} \ 
+          --scope=$VERCEL_SCOPE \ 
+          --token=$VERCEL_TOKEN \
+          --yes
           
     
