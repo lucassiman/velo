@@ -160,7 +160,7 @@ jobs:
       - name: Pull Vercel config (production)
         run: yarn vercel pull --yes --environment=production --token=$VERCEL_TOKEN
 
-      # 6. Build com as vars de produção embutidas
+      # 6. Build com as variáveis de produção embutidas
       - name: Build Vercel (production)
         run: yarn vercel build --prod --token=$VERCEL_TOKEN
 
