@@ -30,5 +30,11 @@ dist-ssr
 /playwright/.cache/
 /playwright/.auth/
 .vercel
+
+# Secrets / variáveis de ambiente
 .env*
-.docs/db-pass.txt
+!.env.example
+docs/db-pass.txt
+
+# Supabase (estado local do CLI)
+supabase/.temp/
