@@ -1,4 +1,4 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig, devices, type ReporterDescription } from '@playwright/test';
 
 /**
  * Read environment variables from file.
@@ -11,6 +11,22 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, '.env') });
+
+/**
+ * Reporters.
+ * O TestDino envia os resultados via streaming durante a execução
+ * (não existe passo de upload pós-run). O reporter só é registrado
+ * quando há TESTDINO_TOKEN, para não quebrar runs locais sem credencial.
+ * No CI o token vem do secret TD_TOKEN, mapeado em .github/workflows/cd.yml.
+ */
+const reporters: ReporterDescription[] = [
+  ['html', { outputDir: './playwright-report' }],
+  ['json', { outputFile: './playwright-report/report.json' }],
+];
+
+if (process.env.TESTDINO_TOKEN) {
+  reporters.push(['@testdino/playwright', { token: process.env.TESTDINO_TOKEN }]);
+}
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -33,10 +49,7 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [
-     ['html', { outputDir: './playwright-report' }],
-    ['json', { outputFile: './playwright-report/report.json' }],
-  ],
+  reporter: reporters,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
